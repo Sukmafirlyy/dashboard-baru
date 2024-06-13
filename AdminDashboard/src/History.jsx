@@ -7,8 +7,8 @@ import SensorContext from './contexts/SensorContext';
 
 const columns = [
   { label: 'Time', dataKey: 'time' },
-  { label: 'Speed', dataKey: 'speed', numeric: true },
-  { label: 'Distance', dataKey: 'distance', numeric: true },
+  { label: 'Speed (Km/h)', dataKey: 'speed', numeric: true },
+  { label: 'Distance (Km)', dataKey: 'distance', numeric: true },
 ];
 
 const VirtuosoTableComponents = {

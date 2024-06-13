@@ -54,8 +54,8 @@ export const SensorProvider = ({ children }) => {
 
     socket1.on('sensorData', (data) => {
       const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
-      const { value, timestamp } = parsedData;
-      const newTimestamp = new Date(timestamp).getTime();
+      const { value, date } = parsedData;
+      const newTimestamp = new Date(date).getTime();
     
       setSensorData(prevData => {
         const newData = [...prevData, { date: newTimestamp, speed: value, time: new Date(newTimestamp).toLocaleString(), distance: totalDistance }].slice(-MAX_DATA_COUNT);
@@ -73,7 +73,7 @@ export const SensorProvider = ({ children }) => {
     
           const updatedData = newData.map((point, index) => ({
             ...point,
-            distance: index === 0 ? 0 : updatedDistance,
+            distance: index === 0 ? 0 : parseFloat(updatedDistance.toFixed(2)),
           }));
     
           setPrevTimestamp(newTimestamp);

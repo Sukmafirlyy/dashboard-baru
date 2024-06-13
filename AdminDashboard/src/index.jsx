@@ -7,7 +7,9 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <SensorProvider> {/* Bungkus App dengan SensorProvider */}
+      <App />
+    </SensorProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

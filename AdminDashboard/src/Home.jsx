@@ -73,7 +73,7 @@ function Home() {
           <div className="d-flex align-items-center">
             {/* Render validTotalDistance, ensuring it's not NaN */}
             <h2>{validTotalDistance}</h2>
-            <span className="unit">km</span>
+            <span className="unit">Km</span>
           </div>
         </div>
         <div className='card'>
@@ -118,7 +118,7 @@ function Home() {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="distance" label={{ value: "Distance (km)", position: 'insideBottomRight', offset: 0 }} />
-            <YAxis label={{ value: "Speed (km/h)", angle: -90, position: 'insideLeft' }}
+            <YAxis label={{ value: "Speed (Km/h)", angle: -90, position: 'insideLeft', dx: 4, dy: 50 }}   // Mengatur posisi vertikal}}
               domain={[0, 300]}
               ticks={[0, 100, 200, 300]}
             />

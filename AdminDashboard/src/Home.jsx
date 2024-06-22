@@ -34,8 +34,16 @@ function Home() {
   const lastSensorData = sensorData.length > 0 ? sensorData[sensorData.length - 1].speed : 0;
   const { value: convertedValue, unit: speedUnit } = kmhToMs(lastSensorData);
 
+  // Check if the speed exceeds the limit
+  const isSpeedExceeded = lastSensorData > 20;
+
   return (
     <main className='main-container'>
+      {isSpeedExceeded && (
+        <div className='warning'>
+          warning: speed exceeds maximum limit!
+        </div>
+      )}
       <div className='gauge-chart'>
         <h3>Gauge Chart</h3>
         <GaugeComponent
@@ -71,7 +79,6 @@ function Home() {
             <h3>Train Position</h3>
           </div>
           <div className="d-flex align-items-center">
-            {/* Render validTotalDistance, ensuring it's not NaN */}
             <h2>{validTotalDistance}</h2>
             <span className="unit">Km</span>
           </div>
@@ -81,32 +88,29 @@ function Home() {
             <h3>Block</h3>
           </div>
           <div className="d-flex align-items-center">
-            <h2>{rfidData.length > 0 ? rfidData[rfidData.length - 1].name : 'Stand by ...'}</h2> {/* untuk dihubungkan dengan sensor */}
+            <h2>{rfidData.length > 0 ? rfidData[rfidData.length - 1].name : 'Stand by ...'}</h2>
             <h3>{rfidData.length > 0 ? rfidData[rfidData.length - 1].tag_id : 'Reading ...'}</h3>
           </div>
         </div>
       </div>
       <div className='button-container'>
-        {/* Card 2 */}
         <div className='company'>
           <div className="d-flex align-items-center">
             <img src={logo} alt="PT.Inka" className="company-logo" />
           </div>
         </div>
-        {/* Card 3 */}
         <div className='info-card'>
           <div className="d-flex align-items-center">
             <h2>{currentTime}</h2>
           </div>
         </div>
-        {/* Card 1 */}
         <div className='button'>
           <button onClick={() => navigate('/history')}>History</button>
         </div>
       </div>
       <div className='line-chart'>
-        <h3>Grafik kecepatan terhadap jarak</h3>
-        <ResponsiveContainer width="100%" height={200}>
+        <h3>Line chart (v-s)</h3>
+        <ResponsiveContainer width="100%" height={300}>
           <LineChart
             data={sensorData}
             margin={{
@@ -118,7 +122,7 @@ function Home() {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="distance" label={{ value: "Distance (km)", position: 'insideBottomRight', offset: 0 }} />
-            <YAxis label={{ value: "Speed (Km/h)", angle: -90, position: 'insideLeft', dx: 4, dy: 50 }}   // Mengatur posisi vertikal}}
+            <YAxis label={{ value: "Speed (Km/h)", angle: -90, position: 'insideLeft', dx: 4, dy: 50 }}
               domain={[0, 300]}
               ticks={[0, 100, 200, 300]}
             />
@@ -128,8 +132,8 @@ function Home() {
           </LineChart>
         </ResponsiveContainer>
       </div>
-
     </main>
   );
 }
+
 export default Home;

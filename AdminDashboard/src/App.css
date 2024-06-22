@@ -27,12 +27,13 @@ h3 {
 .align-items-center {
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .unit {
   color: #000;
   font-weight: bold;
-  font-size: 21px;
+  font-size: 1.3rem;
 }
 
 .main-container {
@@ -53,8 +54,6 @@ h3 {
   border: 1px solid #ccc;
   background: #fff;
   box-sizing: border-box; /* Pastikan padding dihitung dalam ukuran elemen */
-  margin-bottom: -7px;
-  margin-top: 2px;
 }
 
 .gauge-chart h3 {
@@ -127,7 +126,7 @@ h3 {
 }
 
 .info-card h2 {
-  font-size: 14px;
+  font-size: 1rem;
   color: #000000;
 }
 
@@ -186,7 +185,7 @@ h3 {
   text-align: start;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 1rem;
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 4px; /* Membuat sudut tombol melengkung */
@@ -213,4 +212,65 @@ h3 {
 
 h2 {
   margin: 0; /* Menghilangkan margin pada h2 */
+}
+
+.warning {
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  padding: 40px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Pastikan warning berada di depan elemen lain */
+  width: 80%; /* Atur lebar agar lebih responsif */
+  box-sizing: border-box;
+}
+
+
+
+/* Media Queries untuk tampilan yang lebih kecil */
+@media (max-width: 1200px) {
+  .main-container {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+
+  .gauge-chart,
+  .main-cards,
+  .button-container,
+  .line-chart {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .gauge-chart,
+  .main-cards,
+  .button-container,
+  .line-chart {
+    grid-column: 1 / -1;
+  }
+
+  .gauge-chart,
+  .main-cards,
+  .line-chart {
+    height: 50vh;
+  }
+
+  .card {
+    padding: 0px 10px;
+  }
+
+  .button-container button {
+    padding: 10px 20px;
+  }
 }

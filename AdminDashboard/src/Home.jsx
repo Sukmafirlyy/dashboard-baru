@@ -9,17 +9,15 @@ import SensorContext from './contexts/SensorContext';
 function Home() {
   const {
     sensorData,
-    socketConnected,
     gaugeValue,
-    distanceData,
-    totalDistance,
+    encoderDistance, // Menggunakan encoderDistance dari SensorContext
     currentTime,
     rfidData,
     kmhToMs
   } = useContext(SensorContext);
 
   // Define the maximum speed for the gauge
-  const MAX_SPEED = 350;
+  const MAX_SPEED = 120;
 
   // Define the gauge limits with their respective colors
   const gaugeLimits = [
@@ -30,18 +28,20 @@ function Home() {
   ];
 
   const navigate = useNavigate();
-  const validTotalDistance = !isNaN(totalDistance) ? totalDistance.toFixed(2) : '0.00';
   const lastSensorData = sensorData.length > 0 ? sensorData[sensorData.length - 1].speed : 0;
   const { value: convertedValue, unit: speedUnit } = kmhToMs(lastSensorData);
 
   // Check if the speed exceeds the limit
   const isSpeedExceeded = lastSensorData > 20;
 
+  // Convert encoderDistance to kilometers or meters based on the value
+  const displayDistance = encoderDistance < 1 ? (encoderDistance * 1000).toFixed(2) + ' m' : encoderDistance.toFixed(2) + ' km';
+
   return (
     <main className='main-container'>
       {isSpeedExceeded && (
         <div className='warning'>
-          warning: speed exceeds maximum limit!
+          Warning: Speed exceeds maximum limit!
         </div>
       )}
       <div className='gauge-chart'>
@@ -79,8 +79,7 @@ function Home() {
             <h3>Train Position</h3>
           </div>
           <div className="d-flex align-items-center">
-            <h2>{validTotalDistance}</h2>
-            <span className="unit">Km</span>
+            <h2>{displayDistance}</h2>
           </div>
         </div>
         <div className='card'>
@@ -123,8 +122,8 @@ function Home() {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="distance" label={{ value: "Distance (km)", position: 'insideBottomRight', offset: 0 }} />
             <YAxis label={{ value: "Speed (Km/h)", angle: -90, position: 'insideLeft', dx: 4, dy: 50 }}
-              domain={[0, 300]}
-              ticks={[0, 100, 200, 300]}
+              domain={[0, 30]}
+              ticks={[0, 10, 20, 30]}
             />
             <Tooltip />
             <Legend />

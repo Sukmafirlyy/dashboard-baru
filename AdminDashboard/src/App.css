@@ -230,8 +230,6 @@ h2 {
   box-sizing: border-box;
 }
 
-
-
 /* Media Queries untuk tampilan yang lebih kecil */
 @media (max-width: 1200px) {
   .main-container {

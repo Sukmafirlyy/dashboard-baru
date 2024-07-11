@@ -7,14 +7,16 @@ export const SensorProvider = ({ children }) => {
   const [sensorData, setSensorData] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
   const [gaugeValue, setGaugeValue] = useState(0);
-  const [totalDistance, setTotalDistance] = useState(0);
+  const [totalDistance, setTotalDistance] = useState(0); // Total distance from sensorData (if still needed)
+  const [encoderDistance, setEncoderDistance] = useState(0); // Accumulated distance from encoder
   const [prevTimestamp, setPrevTimestamp] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [rfidData, setRfidData] = useState([]);
 
-  const MAX_DATA_COUNT = 20;
-  const MAX_SPEED = 350;
+  const MAX_DATA_COUNT = 5;
+  const MAX_SPEED = 120;
 
+  // Function to convert km/h to m/s
   const kmhToMs = (value) => {
     if (value === undefined) {
       return { value: 'N/A', unit: 'Km/h' };
@@ -56,30 +58,35 @@ export const SensorProvider = ({ children }) => {
       const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
       const { value, date } = parsedData;
       const newTimestamp = new Date(date).getTime();
-    
+
       setSensorData(prevData => {
-        const newData = [...prevData, { date: newTimestamp, speed: value, time: new Date(newTimestamp).toLocaleString(), distance: totalDistance }].slice(-MAX_DATA_COUNT);
-    
+        const newData = [...prevData, { date: newTimestamp, speed: value, time: new Date(newTimestamp).toLocaleString() }].slice(-MAX_DATA_COUNT);
+
         const newGaugeValue = value > MAX_SPEED ? MAX_SPEED : value;
         setGaugeValue(newGaugeValue);
-    
+
         if (prevTimestamp !== null) {
-          const timeDiff = (newTimestamp - prevTimestamp) / 3600000; // time difference in hours
-          const incrementalDistance = value * timeDiff; // distance in kilometers
-    
+          const timeDiff = (newTimestamp - prevTimestamp) / 1000; // time difference in seconds
+          const valueInMetersPerSecond = value / 3.6; // convert km/h to m/s
+          const incrementalDistance = valueInMetersPerSecond * timeDiff; // distance in meters
+
+          // Update total distance (if still needed)
           const updatedDistance = totalDistance + incrementalDistance;
-    
           setTotalDistance(updatedDistance);
-    
+
+          // Update encoder distance
+          const updatedEncoderDistance = encoderDistance + incrementalDistance;
+          setEncoderDistance(updatedEncoderDistance);
+
           const updatedData = newData.map((point, index) => ({
             ...point,
             distance: index === 0 ? 0 : parseFloat(updatedDistance.toFixed(2)),
           }));
-    
+
           setPrevTimestamp(newTimestamp);
           return updatedData;
         }
-    
+
         setPrevTimestamp(newTimestamp);
         return newData;
       });
@@ -106,14 +113,15 @@ export const SensorProvider = ({ children }) => {
       socket1.disconnect();
       clearInterval(interval);
     };
-  }, [prevTimestamp, totalDistance]);
+  }, [prevTimestamp, totalDistance, encoderDistance]); // Include encoderDistance in dependencies
 
   return (
     <SensorContext.Provider value={{
       sensorData,
       socketConnected,
       gaugeValue,
-      totalDistance,
+      totalDistance, // If needed for other purposes
+      encoderDistance, // Accumulated distance from encoder
       currentTime,
       rfidData,
       kmhToMs
